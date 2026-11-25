@@ -20,10 +20,7 @@ function message() {
   const form = document.querySelector('#lead');
   const data = new FormData(form);
 
-  if (!data.get('name') || !data.get('phone')) {
-    form.reportValidity();
-    return null;
-  }
+  if (!form.reportValidity()) return null;
 
   return {
     name: data.get('name'),
@@ -47,11 +44,13 @@ function sendMessenger(type) {
 
   const text = encodeURIComponent(messengerMessage(data));
 
-  const url = type === 'wa'
-    ? `https://wa.me/message/K2PS77GKVPUJB1?text=${text}`
-    : `https://t.me/CRYSTALLCLEANING?text=${text}`;
+  const urls = {
+    wa: `https://wa.me/79141898673?text=${text}`,
+    tg: `https://t.me/CRYSTALLCLEANING?text=${text}`,
+    max: `https://max.ru/u/f9LHodD0cOIyPrLXuxXoHcYFt9ZClJZET6DS9RLdn0CJ-BxPrGx5ie5dDkU`
+  };
 
-  window.open(url, '_blank', 'noopener,noreferrer');
+  window.open(urls[type], '_blank', 'noopener,noreferrer');
 }
 
 document.querySelector('#sendwa').addEventListener('click', () => {
@@ -60,6 +59,10 @@ document.querySelector('#sendwa').addEventListener('click', () => {
 
 document.querySelector('#sendtg').addEventListener('click', () => {
   sendMessenger('tg');
+});
+
+document.querySelector('#sendmax').addEventListener('click', () => {
+  sendMessenger('max');
 });
 
 document.querySelector('#lead').addEventListener('submit', async (event) => {
@@ -97,7 +100,8 @@ document.querySelector('#lead').addEventListener('submit', async (event) => {
     form.reset();
 
   } catch (error) {
-    alert('Не удалось отправить заявку. Попробуйте связаться с нами через WhatsApp или Telegram.');
+    alert('Не удалось отправить заявку. Попробуйте ещё раз или свяжитесь с нами через мессенджер.');
+
   } finally {
     button.disabled = false;
     button.textContent = originalText;
